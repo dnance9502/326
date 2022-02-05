@@ -6,17 +6,20 @@ using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Goal : MonoBehaviour
+public partial class Goal : MonoBehaviour
 {
     public static int P1Score;
     public static int P2Score;
-
 
     public TextMeshProUGUI p1ScoreText;
     public TextMeshProUGUI p2ScoreText;
 
     public GameObject P1winText;
     public GameObject P2winText;
+
+    public GameObject spawner;
+
+    public bool p1start;
     
     // Start is called before the first frame update
     void Start()
@@ -49,19 +52,21 @@ public class Goal : MonoBehaviour
             if (CompareTag("player1"))
             {
                 P1Score++;
-                p1ScoreText.text = "Score: " + P1Score.ToString();
-                BallMovement.P1Start = true;
+                p1ScoreText.text = P1Score.ToString();
+                p1start = true;
 
             }
 
             if (CompareTag("player2"))
             {
                 P2Score++;
-                p2ScoreText.text = "Score: " + P2Score.ToString();
-                BallMovement.P1Start = false;
+                p2ScoreText.text = P2Score.ToString();
+                p1start = false;
 
             }
             Destroy(other.gameObject);
+
+            spawner.GetComponent<SpawnerScript>().Start();
         }
     }
 }

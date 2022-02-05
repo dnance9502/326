@@ -6,39 +6,53 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     public float speed = 10f;
+    public Rigidbody player;
+
     
-    public Rigidbody p1;
-    public Rigidbody p2;
-    
-    private Vector3 movement1;
-    private Vector3 movement2;
-
-
-
-
-    // Start is called before the first frame update
     void Start()
     {
-        p1 = this.GetComponent<Rigidbody>();
-        p2 = this.GetComponent<Rigidbody>();
+        player = this.GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        movement1 = new Vector3(0, 0, Input.GetAxisRaw("Vertical"));
-        //Input.GetButton("Horizontal");
+        if (this.CompareTag("player1"))
+        {
+            if (Input.GetKey(KeyCode.W))
+            {
+                Transform transform1 = player.GetComponent<Transform>();
+                transform1.position += Vector3.forward * speed * Time.deltaTime;
+                //Rigidbody rb = GetComponent<Rigidbody>();
+                //Vector3 move = Vector3.forward * speed * Time.deltaTime;
+                //player.AddForce(move, ForceMode.VelocityChange);
+            }
+
+            if (Input.GetKey(KeyCode.S))
+            {
+                Transform transform1 = player.GetComponent<Transform>();
+                transform1.position += Vector3.back * speed * Time.deltaTime;
+                //Rigidbody rb = GetComponent<Rigidbody>();
+                //Vector3 move = Vector3.back * speed * Time.deltaTime;
+                //player.AddForce(move, ForceMode.VelocityChange);
+            }
+
+        }
+
+        if (this.CompareTag("player2"))
+        {
+            if (Input.GetKey(KeyCode.I))
+            {
+                Transform transform2 = player.GetComponent<Transform>();
+                transform2.position += Vector3.forward * speed * Time.deltaTime;
+            }
+
+            if (Input.GetKey(KeyCode.K))
+            {
+                Transform transform2 = player.GetComponent<Transform>();
+                transform2.position += Vector3.back * speed * Time.deltaTime;
+            }
+
+        }
     }
     
-
-    void FixedUpdate()
-    {
-        move(movement1);
-    }
-
-    void move(Vector3 dir)
-    {
-        p1.AddForce(dir * speed);
-        //p1.MovePosition(transform.position + (dir * (speed * Time.deltaTime)));
-    }
 }

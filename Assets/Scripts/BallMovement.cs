@@ -8,60 +8,57 @@ using Random = UnityEngine.Random;
 public class BallMovement : MonoBehaviour
 {
     public float speed;
+    public float sped;
     public Rigidbody rb;
 
-    public static bool P1Start = true;
-    
     private Vector3 _direction;
     private float _rand;
 
-
-    // Start is called before the first frame update
+    
     void Start()
     {
-
-        // set up random direction
         _rand = Random.Range(-1.0f, 1.0f);
         _direction = new Vector3(-1, 0, _rand);
-
+        bool P1Start = true; //GetComponent<Goal>().p1start;
+        //Debug.Log(P1Start);
+        KickOff(P1Start, rb, _direction);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
-    private void FixedUpdate()
-    {
-        KickOff(P1Start);
-    }
-    
-        private void KickOff(bool player1)
+    private void KickOff(bool player1, Rigidbody ball, Vector3 direction)
     {
         if (player1)
         {
-            rb.AddForce(_direction.normalized * speed);  
+            ball.AddForce(direction * speed * Time.deltaTime, ForceMode.Impulse);
         }
         else
         {
-            rb.AddForce(-_direction.normalized * speed);
+            ball.AddForce(-direction * speed * Time.deltaTime, ForceMode.Impulse);
         }
-        
     }
-
-        
-        private void OnCollisionEnter(Collision other)
+    
+    
+    private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("wall"))
         {
             Debug.Log("contact with wall");
+            rb.AddForce(Reflect(rb.velocity.normalized) * Time.deltaTime * sped, ForceMode.Impulse);
+            Debug.Log(rb.velocity);
         }
 
-        if (other.gameObject.CompareTag("paddle"))
+        else 
         {
             Debug.Log("contact with paddle");
-            rb.AddForce(new Vector3(-_direction.x, 0, -_direction.z) * speed * 2);
+            sped *= 1.2f;
+            rb.AddForce(Reflect(rb.velocity.normalized) * Time.deltaTime * sped, ForceMode.Impulse);
+            Debug.Log(rb.velocity);
+            
         }
+    }
+    
+    Vector3 Reflect(Vector3 direction)
+    {
+        return ((2 * Vector3.Dot(direction, direction.normalized) * direction.normalized) - direction);
     }
 }
